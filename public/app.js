@@ -38,6 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = inputEl.value.trim();
     if (!username) return;
 
+    /* ── Contas bloqueadas por decisão do administrador ── */
+    const BLOCKED_ACCOUNTS = ['adrianacorretorasc'];
+    if (BLOCKED_ACCOUNTS.includes(username.toLowerCase().replace(/^@/, ''))) {
+      showError('⛔ Não é possível visualizar esta conta por decisão do administrador.');
+      return;
+    }
+
     setLoading(true);
     hideError();
     hideResults();
