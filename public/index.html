@@ -3,42 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>InstaStories View</title>
+  <title>Stories Viewer — Anonymous Instagram Stories</title>
+  <meta name="description" content="View Instagram stories anonymously. Just enter a username and watch the stories without leaving a trace.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <div class="background-elements">
+
+  <!-- Animated Background -->
+  <div class="bg-canvas" aria-hidden="true">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
   </div>
-  
-  <div class="container">
-    <header class="glass-header">
-      <h1>Stories Viewer</h1>
-      <p>Enter an Instagram username to anonymously view their current stories.</p>
+
+  <div class="page-wrapper">
+
+    <!-- Hero Header -->
+    <header class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig-grad)" stroke-width="2"/>
+          <circle cx="12" cy="12" r="4" stroke="url(#ig-grad)" stroke-width="2"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="url(#ig-grad)"/>
+          <defs>
+            <linearGradient id="ig-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f09433"/>
+              <stop offset="40%" stop-color="#e1306c"/>
+              <stop offset="100%" stop-color="#833ab4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1>Stories <span class="gradient-text">Viewer</span></h1>
+      <p class="hero-subtitle">Watch Instagram stories anonymously — no account required.</p>
     </header>
 
-    <main>
-      <form id="search-form" class="search-form">
-        <div class="input-group">
-          <span class="at-symbol">@</span>
-          <input type="text" id="username" placeholder="username" required autocomplete="off" spellcheck="false">
-          <button type="submit" id="submit-btn">
-            <span class="btn-text">View</span>
-            <span class="loader" style="display: none;"></span>
+    <!-- Search Section -->
+    <section class="search-section" aria-label="Search for stories">
+      <form id="search-form" class="search-form" autocomplete="off">
+        <div class="input-wrapper" id="input-wrapper">
+          <span class="input-icon" aria-hidden="true">@</span>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter username…"
+            required
+            spellcheck="false"
+            aria-label="Instagram username"
+          />
+          <button type="submit" id="submit-btn" aria-label="Search stories">
+            <span class="btn-text">Search</span>
+            <span class="btn-loader" aria-hidden="true"></span>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
           </button>
         </div>
       </form>
+    </section>
 
-      <div id="error-message" class="error-message"></div>
+    <!-- Status / Error -->
+    <div id="error-box" class="error-box" role="alert" aria-live="polite" hidden>
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span id="error-text"></span>
+    </div>
 
-      <div id="stories-grid" class="stories-grid">
-        <!-- Stories will be injected here -->
+    <!-- Results Area -->
+    <main id="results-area" class="results-area" hidden>
+
+      <!-- Profile Banner -->
+      <div class="profile-banner" id="profile-banner">
+        <div class="profile-avatar-ring">
+          <div class="profile-avatar" id="profile-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="profile-info">
+          <h2 id="profile-username" class="profile-username"></h2>
+          <p id="story-count" class="story-count"></p>
+        </div>
+        <button class="download-all-btn" id="download-all-btn" aria-label="Download all stories">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 3v13M7 11l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 20h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Download All
+        </button>
       </div>
+
+      <!-- Stories Grid -->
+      <div id="stories-grid" class="stories-grid" role="list" aria-label="Stories"></div>
     </main>
+
+  </div><!-- /page-wrapper -->
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Story viewer" hidden>
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close viewer">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous story">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="lightbox-stage" id="lightbox-stage"></div>
+
+    <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next story">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="lightbox-footer" id="lightbox-footer">
+      <span class="lightbox-counter" id="lightbox-counter"></span>
+      <a class="lightbox-download" id="lightbox-download" download aria-label="Download this story">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 3v13M7 11l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 20h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Download
+      </a>
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="lightbox-dots" id="lightbox-dots" aria-hidden="true"></div>
   </div>
 
   <script src="/app.js"></script>
